@@ -1,3 +1,86 @@
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getTextarea() {
+  return document.querySelector('[class^="channelTextArea"]');
+}
+
+function getAttachButton() {
+  const textarea = getTextarea();
+  if (!textarea) return;
+  return textarea.querySelector('[class^="attachButton"]');
+}
+
+function attachButtonExpanded() {
+  const attachButton = getAttachButton();
+  if (!attachButton) return false;
+  return attachButton.getAttribute('aria-expanded') === 'true';
+}
+
+function expandAttachButton() {
+  if (attachButtonExpanded()) return;
+  const attachButton = getAttachButton();
+  if (!attachButton) return;
+  attachButton.click();
+}
+
+function getChannelAttachMenu() {
+  return document.querySelector('#channel-attach');
+}
+
+function getUploadAFileButton() {
+  const channelAttachMenu = getChannelAttachMenu();
+  if (!channelAttachMenu) return;
+  return channelAttachMenu.querySelector('#channel-attach-upload-file');
+}
+
+function getCreateThreadButton() {
+  const channelAttachMenu = getChannelAttachMenu();
+  if (!channelAttachMenu) return;
+  return channelAttachMenu.querySelector('#channel-attach-THREAD');
+}
+
+function getUseAppsButton() {
+  const channelAttachMenu = getChannelAttachMenu();
+  if (!channelAttachMenu) return;
+  return channelAttachMenu.querySelector('#channel-attach-SLASH_COMMAND');
+}
+
+async function openUseAppsMenu() {
+  if (!attachButtonExpanded()) expandAttachButton();
+  await sleep(500);
+  const useAppsButton = getUseAppsButton();
+  if (!useAppsButton) return;
+  useAppsButton.click();
+  await sleep(500);
+}
+
+function getUseAppsMenu() {
+  const textarea = getTextarea();
+  if (!textarea) return;
+  return textarea.querySelector('[class^="autocomplete"]');
+}
+
+function getUseAppsMenuItems() {
+  const useAppsMenu = getUseAppsMenu();
+  if (!useAppsMenu) return;
+  const appsMenuRail = useAppsMenu.querySelector('[class^="rail"]');
+  if (!appsMenuRail) return;
+  return Array.from(appsMenuRail.querySelectorAll('[role="button"]'));
+}
+
+function getMidjourneyButtonInUseAppsMenu() {
+  const useAppsMenuItems = getUseAppsMenuItems();
+  if (!useAppsMenuItems) return;
+  return useAppsMenuItems.find(item => item.getAttribute('aria-label') === 'Midjourney Bot');
+}
+
+async function midjourneyBotInstalled() {
+  await openUseAppsMenu();
+  return !!getMidjourneyButtonInUseAppsMenu();
+}
+
 function getButtons(temp) {
   const buttons = temp.querySelectorAll('button');
   return Array.from(buttons);
@@ -41,10 +124,6 @@ async function submitForm() {
     return;
   }
   submitButton.click();
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function getFormNumber() {
