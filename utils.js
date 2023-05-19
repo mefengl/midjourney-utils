@@ -81,9 +81,22 @@ async function midjourneyBotInstalled() {
   return !!getMidjourneyButtonInUseAppsMenu();
 }
 
+function getButtonContainers() {
+  return document.querySelectorAll("[id^='message-accessorie'] [class^='children']");
+}
+
 function getButtons(temp) {
   const buttons = temp.querySelectorAll('button');
   return Array.from(buttons);
+}
+
+function oneMoreButton(temp) {
+  const buttons = getButtons(temp);
+  const lastButton = buttons[buttons.length - 1];
+  const cloneButton = lastButton.cloneNode(true);
+  cloneButton.innerHTML = '';
+  lastButton.parentNode.insertBefore(cloneButton, lastButton.nextSibling);
+  return cloneButton;
 }
 
 function getSubmitButton() {
