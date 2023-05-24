@@ -93,8 +93,7 @@ function getButtons(temp) {
 function oneMoreButton(temp) {
   const buttons = getButtons(temp);
   const lastButton = buttons[buttons.length - 1];
-  const cloneButton = lastButton.cloneNode(true);
-  cloneButton.innerHTML = '';
+  const cloneButton = lastButton.cloneNode();
   lastButton.parentNode.insertBefore(cloneButton, lastButton.nextSibling);
   return cloneButton;
 }
